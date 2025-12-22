@@ -22,16 +22,25 @@ The system analyzes handwriting samples and classifies them by writer identity, 
 
 ## File Structure
 ```
-├── train.py           # MobileNetV2 transfer learning training
-├── run.py            # ORB-based evaluation and testing
-├── model.h5          # Trained MobileNetV2 model
-├── result.csv        # Performance results
+├── train.py           # MobileNetV2 transfer learning training script
+├── run.py            # ORB-based evaluation and testing script
+├── result.csv        # Performance results output
 ├── requirements.txt  # Python dependencies
-├── train/           # Training images (70 PNG files)
-├── test/            # Test images (140 PNG files)
-├── templates/       # Additional templates
-└── README.md        # This file
+├── templates/       # Additional templates directory
+├── .gitignore       # Git ignore file
+├── LICENSE          # Project license
+└── README.md        # This documentation file
 ```
+
+**Note**: The dataset (train/test images) and trained model (model.h5) are not included in the repository. You'll need to:
+- Add your own handwriting dataset in PNG format
+- Train the model using `python train.py` to generate `model.h5`
+
+## Dataset Requirements
+Since the dataset is not included, you need to prepare:
+- **Training Data**: Place PNG files in a `train/` folder with naming pattern `{writer_id}_{session}_{image_id}.png`
+- **Test Data**: Place PNG files in a `test/` folder with the same naming pattern
+- **Format**: PNG images of handwritten text samples
 
 ## Requirements
 ```
@@ -57,6 +66,13 @@ scikit-learn
    pip install -r requirements.txt
    ```
 
+3. **Prepare your dataset:**
+   ```bash
+   # Create directories for your data
+   mkdir train test
+   # Add your PNG handwriting images to these folders
+   ```
+
 ## Usage
 
 ### Method 1: MobileNetV2 Transfer Learning
@@ -67,11 +83,13 @@ python train.py
 ```
 
 **What it does:**
-- Loads training images and resizes to 128x128
+- Loads training images from `train/` folder and resizes to 128x128
 - Uses MobileNetV2 as feature extractor (frozen)
-- Adds classification layers for 70 writers
+- Adds classification layers for writer identification
 - Trains for 30 epochs with data augmentation
 - Saves trained model as `model.h5`
+
+**Prerequisites:** You need to have your training dataset in the `train/` folder before running this script.
 
 ### Method 2: ORB Feature Matching
 Run the ORB-based handwriting fingerprinting:
@@ -81,10 +99,12 @@ python run.py
 ```
 
 **What it does:**
-- Extracts ORB keypoints from handwriting samples
+- Extracts ORB keypoints from handwriting samples in both `train/` and `test/` folders
 - Uses FLANN matcher for feature comparison
 - Evaluates performance on test set
 - Saves results to `result.csv`
+
+**Prerequisites:** You need both `train/` and `test/` datasets before running this script.
 
 ## Technical Details
 
