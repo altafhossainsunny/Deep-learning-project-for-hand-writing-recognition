@@ -45,7 +45,7 @@ seaborn
 scikit-learn
 ```
 
-## Installation
+## Quick Start
 
 1. **Clone the repository:**
    ```bash
@@ -56,6 +56,15 @@ scikit-learn
 2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
+   ```
+
+3. **Run the project:**
+   ```bash
+   # Option 1: Train MobileNetV2 model (takes ~5-10 minutes)
+   python train.py
+
+   # Option 2: Run ORB feature matching (faster, ~1-2 minutes)  
+   python run.py
    ```
 
 ## Usage
