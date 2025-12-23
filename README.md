@@ -22,6 +22,11 @@ The system analyzes handwriting samples and classifies them by writer identity, 
 
 ## File Structure
 ```
+├── app.py             # Flask web application (NEW!)
+├── templates/         # HTML templates for web interface
+│   ├── index.html     # Main upload page
+│   └── about.html     # Project information page
+├── static/            # Static files (CSS, JS, images)
 ├── train.py           # MobileNetV2 transfer learning training script
 ├── run.py            # ORB-based evaluation and testing script
 ├── model.h5          # Trained MobileNetV2 model
@@ -60,14 +65,35 @@ scikit-learn
 
 3. **Run the project:**
    ```bash
-   # Option 1: Train MobileNetV2 model (takes ~5-10 minutes)
+   # Option 1: Launch Web Interface (recommended)
+   python app.py
+   # Then open http://localhost:5000 in your browser
+   
+   # Option 2: Train MobileNetV2 model (takes ~5-10 minutes)
    python train.py
 
-   # Option 2: Run ORB feature matching (faster, ~1-2 minutes)  
+   # Option 3: Run ORB feature matching (faster, ~1-2 minutes)  
    python run.py
    ```
 
 ## Usage
+
+### Web Interface (Recommended)
+The easiest way to use this project is through the web interface:
+
+```bash
+python app.py
+```
+
+Then open your browser and go to `http://localhost:5000`
+
+**Features:**
+- 🖱️ Drag and drop handwriting images
+- 📊 Get top-3 writer predictions with confidence scores
+- 📱 Mobile-friendly responsive design
+- ⚡ Real-time image preprocessing and analysis
+
+### Command Line Methods
 
 ### Method 1: MobileNetV2 Transfer Learning
 Train a deep learning model for writer classification:
