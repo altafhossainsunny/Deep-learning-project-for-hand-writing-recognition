@@ -23,11 +23,6 @@ The system analyzes handwriting texture patterns using a custom CNN that extract
 
 ## File Structure
 ```
-├── app.py             # Flask web application (NEW!)
-├── templates/         # HTML templates for web interface
-│   ├── index.html     # Main upload page
-│   └── about.html     # Project information page
-├── static/            # Static files (CSS, JS, images)
 ├── train.py           # Custom CNN forensic training script
 ├── run.py            # ORB-based evaluation and testing script
 ├── writer_model.keras # Trained custom CNN model
@@ -36,6 +31,7 @@ The system analyzes handwriting texture patterns using a custom CNN that extract
 ├── requirements.txt  # Python dependencies
 ├── train/           # Training images (70 PNG files)
 ├── test/            # Test images (140 PNG files)
+├── uploads/         # Upload directory
 ├── .gitignore       # Git ignore file
 ├── LICENSE          # Project license
 └── README.md        # This documentation file
@@ -67,35 +63,14 @@ scikit-learn
 
 3. **Run the project:**
    ```bash
-   # Option 1: Launch Web Interface (recommended)
-   python app.py
-   # Then open http://localhost:5000 in your browser
-   
-   # Option 2: Train Custom CNN model (takes ~5-10 minutes)
+   # Option 1: Train Custom CNN model (takes ~5-10 minutes)
    python train.py
 
-   # Option 3: Run ORB feature matching (faster, ~1-2 minutes)  
+   # Option 2: Run ORB feature matching (faster, ~1-2 minutes)  
    python run.py
    ```
 
 ## Usage
-
-### Web Interface (Recommended)
-The easiest way to use this project is through the web interface:
-
-```bash
-python app.py
-```
-
-Then open your browser and go to `http://localhost:5000`
-
-**Features:**
-- 🖱️ Drag and drop handwriting images
-- 📊 Get top-3 writer predictions with confidence scores
-- 📱 Mobile-friendly responsive design
-- ⚡ Real-time image preprocessing and analysis
-
-### Command Line Methods
 
 ### Method 1: Custom CNN Forensic Architecture
 Train a deep learning model for writer classification:
