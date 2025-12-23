@@ -43,8 +43,10 @@ tensorflow
 pandas
 matplotlib
 seaborn
-scikit-learnflask
-werkzeug```
+scikit-learn
+flask
+werkzeug
+```
 
 ## Quick Start
 
