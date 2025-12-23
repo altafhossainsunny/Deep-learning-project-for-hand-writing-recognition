@@ -1,20 +1,18 @@
 # Deep Learning Project for Handwriting Recognition
 
 ## Project Overview
-This project implements a handwriting writer identification system using two approaches:
-1. **Custom CNN Architecture** - Deep learning classification approach with forensic handwriting analysis
-2. **ORB Feature Extraction** - Computer vision keypoint matching approach
+This project implements a handwriting writer identification system using a custom CNN architecture for forensic handwriting analysis.
 
 The system analyzes handwriting texture patterns using a custom CNN that extracts features from 64x64 image patches, classifying them by writer identity. The model works with PNG images from a dataset of 70 different writers.
 
 ## Features
 - 🎯 Writer identification using custom CNN forensic architecture
-- 🔍 ORB keypoint extraction for handwriting fingerprinting  
-- 📊 Performance evaluation with multiple metrics
+- � Performance evaluation with multiple metrics
 - 🖼️ Processes PNG handwriting samples with texture patch analysis
 - ⚙️ Automated preprocessing with Otsu's thresholding
 - 📈 Results tracking and CSV export
 - 🧩 Image patch extraction for detailed texture analysis
+- 🔮 CNN model evaluation and testing on test dataset
 
 ## Dataset Structure
 - **Training Data**: 70 writers (01-70), 1 sample each in `train/` folder
@@ -24,7 +22,7 @@ The system analyzes handwriting texture patterns using a custom CNN that extract
 ## File Structure
 ```
 ├── train.py           # Custom CNN forensic training script
-├── run.py            # ORB-based evaluation and testing script
+├── run.py            # CNN model evaluation and testing script
 ├── writer_model.keras # Trained custom CNN model
 ├── labels.pkl        # Encoded writer labels
 ├── result.csv        # Performance results output
@@ -66,7 +64,7 @@ scikit-learn
    # Option 1: Train Custom CNN model (takes ~5-10 minutes)
    python train.py
 
-   # Option 2: Run ORB feature matching (faster, ~1-2 minutes)  
+   # Option 2: Evaluate trained CNN model on test data (faster, ~1-2 minutes)  
    python run.py
    ```
 
@@ -86,18 +84,21 @@ python train.py
 - Uses texture pattern analysis for writer identification
 - Saves trained model as `writer_model.keras` and labels as `labels.pkl`
 
-### Method 2: ORB Feature Matching
-Run the ORB-based handwriting fingerprinting:
+### Method 2: CNN Model Evaluation
+Evaluate the trained CNN model on test data:
 
 ```bash
 python run.py
 ```
 
 **What it does:**
-- Extracts ORB keypoints from handwriting samples in both `train/` and `test/` folders
-- Uses FLANN matcher for feature comparison
-- Evaluates performance on test set
-- Saves results to `result.csv`
+- Loads the trained CNN model (`writer_model.keras`) and label encoder (`labels.pkl`)
+- Processes test images with the same preprocessing pipeline (Otsu's thresholding)
+- Extracts 64x64 patches from each test image
+- Uses the trained CNN to predict writer identity for each patch
+- Combines predictions using majority voting (averaging probabilities)
+- Calculates accuracy and ROC-AUC scores
+- Saves detailed results to `result.csv`
 
 ## Technical Details
 
@@ -174,10 +175,11 @@ Total Parameters: 896 + 18,496 + 1,605,760 + 9,030 = 1,634,182 parameters
 - **ReLU activation**: Prevents vanishing gradients and enables faster training
 - **Dropout (0.5)**: Regularization to prevent overfitting on limited training data
 
-### ORB Feature Extraction (run.py)
-- **Features**: 500 ORB keypoints per image
-- **Matching**: FLANN-based matcher with ratio test
-- **Similarity**: Good matches count as similarity score
+### CNN Model Evaluation (run.py)
+- **Patch Extraction**: Same 64x64 patches with 32-pixel stride as training
+- **Prediction Strategy**: Majority voting by averaging probabilities from all patches
+- **Metrics**: Accuracy and multi-class ROC-AUC evaluation
+- **Output**: Detailed predictions saved to `result.csv`
 
 ## Performance Metrics
 The system evaluates using:
@@ -217,9 +219,9 @@ Epoch 26/26
 - 📏 Consistent image quality improves results
 
 ## Results
-The project achieves writer identification through two complementary approaches:
-- **Custom CNN**: Uses learned texture features from handwriting patches with forensic analysis
-- **Traditional CV**: Uses handcrafted ORB features
+The project achieves writer identification through a custom CNN architecture:
+- **Training**: Custom CNN learns texture features from 64x64 handwriting patches
+- **Evaluation**: Trained model tested on separate test dataset with majority voting
 
 The CNN model with **1.63M parameters** focuses on fine-grained texture analysis, making it particularly effective for forensic handwriting analysis. Results are automatically saved to `result.csv` for analysis.
 
