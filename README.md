@@ -43,8 +43,8 @@ tensorflow
 pandas
 matplotlib
 seaborn
-scikit-learn
-```
+scikit-learnflask
+werkzeug```
 
 ## Quick Start
 
@@ -79,10 +79,11 @@ python train.py
 
 **What it does:**
 - Loads training images from `train/` folder and processes with Otsu's thresholding
-- Extracts overlapping 64x64 texture patches from handwriting samples
-- Trains a custom CNN with forensic-focused architecture for 26 epochs
-- Uses texture pattern analysis for writer identification
-- Saves trained model as `writer_model.keras` and labels as `labels.pkl`
+- Extracts overlapping 64x64 texture patches from handwriting samples (32-pixel stride)
+- Creates training dataset from texture patches with writer labels
+- Trains a custom CNN with forensic-focused architecture for 26 epochs (batch size 8)
+- Uses Adam optimizer with sparse categorical crossentropy loss
+- Saves trained model as `writer_model.keras` and label encoder as `labels.pkl`
 
 ### Method 2: CNN Model Evaluation
 Evaluate the trained CNN model on test data:
@@ -94,11 +95,11 @@ python run.py
 **What it does:**
 - Loads the trained CNN model (`writer_model.keras`) and label encoder (`labels.pkl`)
 - Processes test images with the same preprocessing pipeline (Otsu's thresholding)
-- Extracts 64x64 patches from each test image
+- Extracts 64x64 patches from each test image using 32-pixel stride
 - Uses the trained CNN to predict writer identity for each patch
-- Combines predictions using majority voting (averaging probabilities)
-- Calculates accuracy and ROC-AUC scores
-- Saves detailed results to `result.csv`
+- Combines predictions using majority voting (averaging probabilities across all patches)
+- Calculates accuracy and multi-class ROC-AUC scores
+- Saves detailed results with filename, actual, and predicted labels to `result.csv`
 
 ## Technical Details
 
@@ -174,12 +175,16 @@ Total Parameters: 896 + 18,496 + 1,605,760 + 9,030 = 1,634,182 parameters
 - **32-pixel stride**: Overlapping patches ensure no texture information is lost
 - **ReLU activation**: Prevents vanishing gradients and enables faster training
 - **Dropout (0.5)**: Regularization to prevent overfitting on limited training data
+- **Adam optimizer**: Adaptive learning rate for efficient convergence
+- **Sparse categorical crossentropy**: Efficient loss for integer-labeled multiclass classification
+- **Batch size 8**: Small batches for better convergence on limited training data
 
 ### CNN Model Evaluation (run.py)
 - **Patch Extraction**: Same 64x64 patches with 32-pixel stride as training
-- **Prediction Strategy**: Majority voting by averaging probabilities from all patches
-- **Metrics**: Accuracy and multi-class ROC-AUC evaluation
-- **Output**: Detailed predictions saved to `result.csv`
+- **Prediction Strategy**: Majority voting by averaging probabilities from all patches per image
+- **Metrics**: Accuracy and multi-class ROC-AUC evaluation using sklearn
+- **Output Format**: CSV with filename, actual writer ID, and predicted writer ID
+- **Performance Display**: Console output shows final accuracy and ROC-AUC scores
 
 ## Performance Metrics
 The system evaluates using:
@@ -190,12 +195,22 @@ The system evaluates using:
 - **ROC-AUC**: Area under ROC curve
 
 ## Example Output
+
+**Training (train.py):**
 ```
 📦 Extracting Handwriting Textures...
 🔥 Training on [X] handwriting texture samples...
 Epoch 26/26
 [X]/[X] ━━━━━━━━━━━━━━━━━━━━ 2s - loss: 0.2145 - accuracy: 0.9234
 ✅ Forensic Model Saved
+```
+
+**Evaluation (run.py):**
+```
+🔮 Scanning Test Images...
+
+🎯 Accuracy : 0.8571
+📊 ROC-AUC  : 0.9234
 ```
 
 ## Dataset Information
